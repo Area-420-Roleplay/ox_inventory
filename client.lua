@@ -1281,7 +1281,7 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 		if point.isClosest and point.currentDistance < 1.2 then
 			if not hasTextUi then
 				hasTextUi = point
-				lib.showTextUI(point.message, uiOptions)
+				exports['jg-textui']:DrawText(point.message, uiOptions) -- Use the export for showing text
 			end
 
 			if IsControlJustReleased(0, 38) then
@@ -1297,7 +1297,7 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 			end
 		elseif hasTextUi == point then
 			hasTextUi = false
-			lib.hideTextUI()
+			exports['jg-textui']:HideText() -- Use the export for hiding text
 		end
 	end
 

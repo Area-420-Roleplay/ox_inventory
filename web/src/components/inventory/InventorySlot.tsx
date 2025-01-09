@@ -29,7 +29,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
 ) => {
   const manager = useDragDropManager();
   const dispatch = useAppDispatch();
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<NodeJS.Timer | null>(null);
 
   const canDrag = useCallback(() => {
     return canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups }) && canCraftItem(item, inventoryType);
@@ -132,16 +132,15 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
             : undefined,
         opacity: isDragging ? 0.4 : 1.0,
         backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
-        border: isOver ? '1px dashed rgba(255,255,255,0.4)' : '',
       }}
     >
       {isSlotWithItem(item) && (
         <div
           className="item-slot-wrapper"
           onMouseEnter={() => {
-            timerRef.current = window.setTimeout(() => {
+            timerRef.current = setTimeout(() => {
               dispatch(openTooltip({ item, inventoryType }));
-            }, 500) as unknown as number;
+            }, 500);
           }}
           onMouseLeave={() => {
             dispatch(closeTooltip());
@@ -210,11 +209,10 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
                 )}
               </>
             )}
-            <div className="inventory-slot-label-box">
+
               <div className="inventory-slot-label-text">
                 {item.metadata?.label ? item.metadata.label : Items[item.name]?.label || item.name}
               </div>
-            </div>
           </div>
         </div>
       )}

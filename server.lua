@@ -664,3 +664,7 @@ lib.addCommand('viewinv', {
 }, function(source, args)
 	Inventory.InspectInventory(source, tonumber(args.invId) or args.invId)
 end)
+
+exports.ox_inventory:AddItem(source, 'advancedlockpick_blueprint', 1, {
+    blueprint = 'b71ac578-8a5d-4f3e-80fb-36bc67b4d7c9'
+})

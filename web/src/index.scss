@@ -1,9 +1,11 @@
-$mainColor: #22232c;
-$textColor: #c1c2c5;
-$mainFont: Roboto;
+@import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
 
-$secondaryColor: rgba(12, 12, 12, 0.4);
-$secondaryColorHighlight: #33343F;
+$mainColor: #222c2a;
+$textColor: #dbdcdf;
+$mainFont: Teko;
+
+$secondaryColor: #212529;
+$secondaryColorHighlight: #3f3f3f;
 $secondaryColorLight: rgba(0, 0, 0, 0.5);
 $secondaryColorDark: rgba(12, 12, 12, 0.8);
 
@@ -57,13 +59,12 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .context-menu-list {
-  min-width: 200px;
-  background-color: $mainColor;
+  width: fit-content;
+  min-width: 100px;
+  background-color: transparent;
   color: $textColor;
-  padding: 4px;
-  border-color: rgba(0, 0, 0, 0.2);
-  border-style: inset;
-  border-width: 1px;
+
+  gap: .3vw;
   border-radius: 4px;
   outline: none;
   display: flex;
@@ -71,20 +72,21 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .context-menu-item  {
-  padding: 8px;
-  border-radius: 4px;
-  background-color: transparent;
+  padding: 10px 10px;
+  border-radius: 1vw;
+  background-color: $textColor;
   outline: none;
   border: none;
-  color: $textColor;
-  display: flex;
-  justify-content: space-between;
+  color: rgb(14, 14, 14);
+
+  transition: 0.2s ease;
+  text-align: center;
   align-items: center;
   &:active {
     transform: none;
   }
   &:hover {
-    background-color: $secondaryColorHighlight;
+    background-color: #969696;
     cursor: pointer;
   }
 }
@@ -102,8 +104,8 @@ button:active {
 }
 
 .item-drag-preview {
-  width: 7.7vh;
-  height: 7.7vh;
+  width: 10.1vh;
+  height: 11vh;
   z-index: 1;
   position: fixed;
   pointer-events: none;
@@ -113,33 +115,34 @@ button:active {
   background-position: center;
   background-size: 7vh;
   image-rendering: -webkit-optimize-contrast;
+  background-color: $secondaryColor;
+  border-radius: .5vw;
 }
 
 .inventory-wrapper {
+  background-color: #111111f5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 2vh;
+}
+
+.inv-grid-wrapper{
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 100%;
-
-  gap: 20px;
+  gap: 6vh;
 }
 
-.inventory-control {
-  display: flex;
-
-  .inventory-control-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    justify-content: center;
-    align-items: center;
-  }
 
   .inventory-control-input {
     transition: 200ms;
-    padding: 16px 8px;
-    border-radius: 2.5%;
+    width: 5vw;
+    height: 2vw;
+    border-radius: .5vh;
     font-family: $mainFont;
     font-size: 16px;
     text-align: center;
@@ -152,23 +155,6 @@ button:active {
     }
   }
 
-  .inventory-control-button {
-    font-size: 14px;
-    color: #fff;
-    background-color: $secondaryColor;
-    transition: 200ms;
-    padding: 12px 8px;
-    border-radius: 2.5%;
-    border: none;
-    text-transform: uppercase;
-    font-family: $mainFont;
-    width: 100%;
-    font-weight: 500;
-    &:hover {
-      background-color: $secondaryColorDark;
-    }
-  }
-}
 
 .useful-controls-dialog {
   background-color: $mainColor;
@@ -267,7 +253,7 @@ button:active {
   flex-direction: row;
   justify-content: space-between;
   p {
-    font-size: 16px;
+    font-size: 26px;
   }
 }
 
@@ -280,51 +266,70 @@ button:active {
   overflow-y: scroll;
 }
 
+.hot-inventory-grid-container {
+  position: absolute;
+  padding-left: 2vw;
+  margin-top: 5vh;
+  left: 6vh;
+  display: grid;
+  grid-template-rows: repeat($gridCols, $gridSize);
+  grid-auto-columns: $gridSize + 0.22vh;
+  gap: $gridGap;
+  overflow-y: scroll;
+}
+
+.shop-inventory-grid-container {
+  display: grid;
+  height: $containerSize;
+  grid-template-columns: repeat(2, 25.5vh); /* Halved the column size */
+  grid-auto-rows: $gridSize + 0.22vh;
+  gap: $gridGap;
+  overflow-y: scroll;
+}
+
 // inventory slots
 .inventory-slot {
   background-color: $secondaryColor;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: 2.5%;
+  border-radius: .6vh;
   image-rendering: -webkit-optimize-contrast;
   position: relative;
-  background-size: 7vh;
+  background-size: 6vh;
   color: $textColor;
   border-color: rgba(0, 0, 0, 0.2);
   border-style: inset;
   border-width: 1px;
 }
 
-.inventory-slot-label-box {
-  background-color: $mainColor;
-  color: $textColor;
-  text-align: center;
-  border-bottom-left-radius: 0.25vh;
-  border-bottom-right-radius: 0.25vh;
-  border-top-color: rgba(0, 0, 0, 0.2);
-  border-top-style: inset;
-  border-top-width: 1px;
+.inventory-slot:hover{
+  color: black;
+  background-color: #e7e7e7e3;
 }
+
 
 .inventory-slot-label-text {
   text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
   padding: 2px 3px;
   font-weight: 400;
   font-family: $mainFont;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .inventory-slot-number {
-  background-color: white;
-  color: black;
-  height: 12px;
-  border-top-left-radius: 0.25vh;
-  border-bottom-right-radius: 0.25vh;
-  padding: 3px;
-  font-size: 12px;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  border-radius: 5px;
+  top: 50%;
+  left: -20%;
+  color: $textColor;
+  background-color: $secondaryColor;
+  padding: .3vh 1vh;
+  font-size: 14px;
   font-family: $mainFont;
 }
 
@@ -338,21 +343,10 @@ button:active {
   }
 }
 
-.item-slot-header-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-}
-
-.item-hotslot-header-wrapper {
-  @extend .item-slot-header-wrapper;
-  justify-content: space-between !important;
-}
-
 .item-slot-info-wrapper {
   display: flex;
   flex-direction: row;
-  align-self: flex-end;
+  justify-content: space-between;
   padding: 3px;
   gap: 3px;
   p {
@@ -376,9 +370,9 @@ button:active {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  padding-right: 3px;
+  padding-right: 20px;
   p {
-    font-size: 14px;
+    font-size: 34px;
     text-shadow: 0.1vh 0.1vh 0 rgba(0, 0, 0, 0.7);
   }
 }
@@ -387,7 +381,7 @@ button:active {
 .tooltip-wrapper {
   pointer-events: none;
   display: flex;
-  background-color: $mainColor;
+  background-color: rgba(14, 21, 22, 0.861);
   width: 200px;
   padding: 8px;
   flex-direction: column;
@@ -395,15 +389,11 @@ button:active {
   color: $textColor;
   font-family: $mainFont;
   border-radius: 4px;
-  border-color: rgba(0, 0, 0, 0.2);
-  border-style: inset;
-  border-width: 1px;
   p {
     font-size: 12px;
     font-weight: 400;
   }
 }
-
 .tooltip-header-wrapper {
   display: flex;
   flex-direction: row;
@@ -504,9 +494,13 @@ button:active {
 }
 
 .durability-bar {
-  background: rgba(0, 0, 0, 0.5);
-  height: 3px;
+  position: relative;
+  left: 10%;
+  background: rgba(0, 0, 0, 0.349);
+  border-radius: 5px;
+  height: 4px;
   overflow: hidden;
+  width: 80%;
 }
 
 .weight-bar {

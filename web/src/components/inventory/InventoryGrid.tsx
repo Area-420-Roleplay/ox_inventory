@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Inventory } from '../../typings';
+import { Inventory, InventoryType } from '../../typings';
 import WeightBar from '../utils/WeightBar';
 import InventorySlot from './InventorySlot';
 import { getTotalWeight } from '../../helpers';
 import { useAppSelector } from '../../store';
 import { useIntersection } from '../../hooks/useIntersection';
+import { slice } from 'lodash';
+import InventoryControl from './InventoryControl';
+const PAGE_SIZE = 35;
 
-const PAGE_SIZE = 30;
 
 const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   const weight = useMemo(
@@ -17,7 +19,7 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   const containerRef = useRef(null);
   const { ref, entry } = useIntersection({ threshold: 0.5 });
   const isBusy = useAppSelector((state) => state.inventory.isBusy);
-
+  const hotbar = inventory.items.slice(0,5)
   useEffect(() => {
     if (entry && entry.isIntersecting) {
       setPage((prev) => ++prev);
@@ -35,11 +37,30 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
               </p>
             )}
           </div>
-          <WeightBar percent={inventory.maxWeight ? (weight / inventory.maxWeight) * 100 : 0} />
+
         </div>
-        <div className="inventory-grid-container" ref={containerRef}>
+
+        <div className="hot-inventory-grid-container" ref={containerRef}>
           <>
-            {inventory.items.slice(0, (page + 1) * PAGE_SIZE).map((item, index) => (
+            {hotbar.map((item, index) => (
+              inventory.type == 'player'
+              ? <InventorySlot
+                key={`${inventory.type}-${inventory.id}-${item.slot}`}
+                item={item}
+                ref={index === (page + 1) * PAGE_SIZE - 1 ? ref : null}
+                inventoryType={inventory.type}
+                inventoryGroups={inventory.groups}
+                inventoryId={inventory.id}
+              />
+              : undefined
+            ))}
+          </>
+        </div>
+
+        {inventory.type == 'player'
+        ? <div className="inventory-grid-container" ref={containerRef}>
+          <>
+            {inventory.items.slice(5, (page + 1) * PAGE_SIZE).map((item, index) => (
               <InventorySlot
                 key={`${inventory.type}-${inventory.id}-${item.slot}`}
                 item={item}
@@ -49,8 +70,30 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
                 inventoryId={inventory.id}
               />
             ))}
+
           </>
         </div>
+
+        : <div className={
+          inventory.type == 'crafting' || inventory.type == 'shop'
+          ? "shop-inventory-grid-container"
+          : "inventory-grid-container"
+        } ref={containerRef}>
+        <>
+          {inventory.items.slice(0, (page + 1) * PAGE_SIZE).map((item, index) => (
+            <InventorySlot
+              key={`${inventory.type}-${inventory.id}-${item.slot}`}
+              item={item}
+              ref={index === (page + 1) * PAGE_SIZE - 1 ? ref : null}
+              inventoryType={inventory.type}
+              inventoryGroups={inventory.groups}
+              inventoryId={inventory.id}
+            />
+          ))}
+
+        </>
+      </div>
+        }
       </div>
     </>
   );

@@ -38,7 +38,6 @@ const InventoryHotbar: React.FC = () => {
             {isSlotWithItem(item) && (
               <div className="item-slot-wrapper">
                 <div className="hotbar-slot-header-wrapper">
-                  <div className="inventory-slot-number">{item.slot}</div>
                   <div className="item-slot-info-wrapper">
                     <p>
                       {item.weight > 0

@@ -180,7 +180,7 @@ function Utils.nearbyMarker(point)
     if point.isClosest and point.currentDistance < 1.2 then
         if not hasTextUi then
             hasTextUi = point
-            lib.showTextUI(point.prompt.message, point.prompt.options)
+            exports['jg-textui']:DrawText(point.prompt.message, point.prompt.options) -- Use the export for showing text
         end
 
         if IsControlJustReleased(0, 38) then
@@ -196,8 +196,9 @@ function Utils.nearbyMarker(point)
         end
     elseif hasTextUi == point then
         hasTextUi = nil
-        lib.hideTextUI()
+        exports['jg-textui']:HideText() -- Use the export for hiding text
     end
 end
+
 
 return Utils
