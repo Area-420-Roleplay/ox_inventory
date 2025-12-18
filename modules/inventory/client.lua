@@ -2,20 +2,49 @@ if not lib then return end
 
 local Inventory = {}
 
-Inventory.Dumpsters = {684586828, 577432224, 682791951, -206690185, 1511880420, 218085040, -58485588, 666561306}
+Inventory.Dumpsters = lib.array:new(218085040, 666561306, -58485588, -206690185, 1511880420, 682791951)
+
+if shared.networkdumpsters then
+    -- Make sure dumpsters are frozen to ensure persistent position across clients
+    SetInterval(function()
+        local objects = GetGamePool('CObject')
+
+        for i = 1, #objects do
+            local object = objects[i]
+            local state = Entity(object).state
+
+            if state.isDumpster == nil then
+                local model = GetEntityModel(object)
+                local isDumpster = Inventory.Dumpsters:includes(model)
+
+                state.isDumpster = isDumpster
+
+                if isDumpster then
+                    FreezeEntityPosition(object, true)
+                end
+            end
+        end
+    end, 3000)
+end
 
 function Inventory.OpenDumpster(entity)
+	if shared.networkdumpsters then
+        local coords = GetEntityCoords(entity)
+        client.openInventory('dumpster', coords)
+        return
+    end
+
 	local netId = NetworkGetEntityIsNetworked(entity) and NetworkGetNetworkIdFromEntity(entity)
 
-	if not netId then
-		local coords = GetEntityCoords(entity)
-		entity = GetClosestObjectOfType(coords.x, coords.y, coords.z, 0.1, GetEntityModel(entity), true, true, true)
-		netId = entity ~= 0 and NetworkGetNetworkIdFromEntity(entity)
-	end
+    if not netId then
+        local coords = GetEntityCoords(entity)
+        entity = GetClosestObjectOfType(coords.x, coords.y, coords.z, 0.1, GetEntityModel(entity), true, true, true)
+        netId = entity ~= 0 and NetworkGetNetworkIdFromEntity(entity)
+    end
 
 	if netId then
-		client.openInventory('dumpster', 'dumpster'..netId)
-	end
+        client.openInventory('dumpster', 'dumpster' .. netId)
+    end
 end
 
 local Utils = require 'modules.utils.client'
@@ -91,14 +120,6 @@ if shared.target then
             return Inventory.OpenTrunk(data.entity)
         end
     })
-else
-	local dumpsters = table.create(0, #Inventory.Dumpsters)
-
-	for i = 1, #Inventory.Dumpsters do
-		dumpsters[Inventory.Dumpsters[i]] = true
-	end
-
-	Inventory.Dumpsters = dumpsters
 end
 
 ---@param search 'slots' | 1 | 'count' | 2
@@ -106,41 +127,46 @@ end
 ---@param metadata? table | string
 function Inventory.Search(search, item, metadata)
 	if not PlayerData.loaded then
-		if not coroutine.running() then
-			error('player inventory has not yet loaded.')
-		end
+        if not coroutine.running() then
+            error('player inventory has not yet loaded.')
+        end
 
-		repeat Wait(100) until PlayerData.loaded
-	end
+        repeat Wait(100) until PlayerData.loaded
+    end
 
-	if item then
-		if search == 'slots' then search = 1 elseif search == 'count' then search = 2 end
-		if type(item) == 'string' then item = {item} end
-		if type(metadata) == 'string' then metadata = {type=metadata} end
+    if item then
+        if search == 'slots' then search = 1 elseif search == 'count' then search = 2 end
+        if type(item) == 'string' then item = { item } end
+        if type(metadata) == 'string' then metadata = { type = metadata } end
 
-		local items = #item
-		local returnData = {}
-		for i = 1, items do
-			local item = string.lower(item[i])
-			if item:sub(0, 7) == 'weapon_' then item = string.upper(item) end
-			if search == 1 then returnData[item] = {}
-			elseif search == 2 then returnData[item] = 0 end
-			for _, v in pairs(PlayerData.inventory) do
-				if v.name == item then
-					if not v.metadata then v.metadata = {} end
-					if not metadata or table.contains(v.metadata, metadata) then
-						if search == 1 then returnData[item][#returnData[item]+1] = PlayerData.inventory[v.slot]
-						elseif search == 2 then
-							returnData[item] += v.count
-						end
-					end
-				end
-			end
-		end
-		if next(returnData) then return items == 1 and returnData[item[1]] or returnData end
-	end
-	return false
+        local items = #item
+        local returnData = {}
+        for i = 1, items do
+            local item = string.lower(item[i])
+            if item:sub(0, 7) == 'weapon_' then item = string.upper(item) end
+            if search == 1 then
+                returnData[item] = {}
+            elseif search == 2 then
+                returnData[item] = 0
+            end
+            for _, v in pairs(PlayerData.inventory) do
+                if v.name == item then
+                    if not v.metadata then v.metadata = {} end
+                    if not metadata or table.contains(v.metadata, metadata) then
+                        if search == 1 then
+                            returnData[item][#returnData[item] + 1] = PlayerData.inventory[v.slot]
+                        elseif search == 2 then
+                            returnData[item] += v.count
+                        end
+                    end
+                end
+            end
+        end
+        if next(returnData) then return items == 1 and returnData[item[1]] or returnData end
+    end
+    return false
 end
+
 exports('Search', Inventory.Search)
 
 exports('GetPlayerItems', function()
@@ -277,15 +303,16 @@ local function openEvidence()
 	client.openInventory('policeevidence')
 end
 
-local markerColour = { 30, 30, 150 }
 local textPrompts = {
     evidence = {
         options = { icon = 'fa-box-archive' },
-        message = ('**%s**  \n%s'):format(locale('open_police_evidence'), locale('interact_prompt', GetControlInstructionalButton(0, 38, true):sub(3)))
+        message = ('**%s**  \n%s'):format(locale('open_police_evidence'),
+            locale('interact_prompt', GetControlInstructionalButton(0, 38, true):sub(3)))
     },
     stash = {
         options = { icon = 'fa-warehouse' },
-        message = ('**%s**  \n%s'):format(locale('open_stash'), locale('interact_prompt', GetControlInstructionalButton(0, 38, true):sub(3)))
+        message = ('**%s**  \n%s'):format(locale('open_stash'),
+            locale('interact_prompt', GetControlInstructionalButton(0, 38, true):sub(3)))
     }
 }
 
@@ -312,26 +339,26 @@ Inventory.Evidence = setmetatable(lib.load('data.evidence'), {
                             }
                         })
 					end
-				else
-					evidence.target = nil
-					evidence.point = lib.points.new({
-						coords = evidence.coords,
-						distance = 16,
-						inv = 'policeevidence',
-						marker = markerColour,
+                else
+                    evidence.target = nil
+                    evidence.point = lib.points.new({
+                        coords = evidence.coords,
+                        distance = 16,
+                        inv = 'policeevidence',
+                        marker = client.evidencemarker,
                         prompt = textPrompts.evidence,
 						nearby = Utils.nearbyMarker
-					})
-				end
-			end
-		end
-	end
+                    })
+                end
+            end
+        end
+    end
 })
 
 Inventory.Stashes = setmetatable(lib.load('data.stashes'), {
 	__call = function(self)
-		for id, stash in pairs(self) do
-			if stash.jobs then stash.groups = stash.jobs end
+        for id, stash in pairs(self) do
+            if stash.jobs then stash.groups = stash.jobs end
 
 			if stash.point then
 				stash.point:remove()
@@ -362,7 +389,7 @@ Inventory.Stashes = setmetatable(lib.load('data.stashes'), {
 						distance = 16,
 						inv = 'stash',
 						invId = stash.name,
-						marker = markerColour,
+						marker = client.evidencemarker,
                         prompt = textPrompts.stash,
 						nearby = Utils.nearbyMarker
 					})

@@ -1,10 +1,12 @@
 return {
 	{
+        name = 'debug_crafting',
 		items = {
 			{
 				name = 'lockpick',
 				ingredients = {
-					burger = 1,
+					scrapmetal = 5,
+					WEAPON_HAMMER = 0.05
 				},
 				duration = 5000,
 				count = 2,
@@ -12,8 +14,7 @@ return {
 		},
 		points = {
 			vec3(-1147.083008, -2002.662109, 13.180260),
-			vec3(-345.374969, -130.687088, 39.009613),
-			vec(-768.2922, 328.6161, 196.0862)
+			vec3(-345.374969, -130.687088, 39.009613)
 		},
 		zones = {
 			{
@@ -28,12 +29,7 @@ return {
 				distance = 1.5,
 				rotation = 70.0,
 			},
-			{
-				coords = vec3(-768.2922, 328.6161, 196.0862),
-				size = vec3(3.8, 1.05, 0.15),
-				distance = 1.5,
-				rotation = 272.0,
-			},
 		},
+		blip = { id = 566, colour = 31, scale = 0.8 },
 	},
 }

@@ -67,6 +67,25 @@ end
 exports('setPlayerInventory', server.setPlayerInventory)
 AddEventHandler('ox_inventory:setPlayerInventory', server.setPlayerInventory)
 
+local registeredDumpsters = {}
+
+---@param coords vector3
+---@return string?
+local function getDumpsterFromCoords(coords)
+	local found
+
+	for i = 1, #registeredDumpsters do
+		local distance = #(coords - registeredDumpsters[i])
+
+		if distance < 0.1 then
+			found = i
+			break
+		end
+	end
+
+	return found
+end
+
 ---@param playerPed number
 ---@param stash OxInventory
 ---@return vector3?
@@ -159,13 +178,13 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 				right = Inventory(data)
 
                 if right and data.netid ~= right.netid then
-                    local invEntity = NetworkGetEntityFromNetworkId(right.netid)
+					local invEntity = NetworkGetEntityFromNetworkId(right.netid)
 
-                    if DoesEntityExist(invEntity) or plate and not string.match(GetVehicleNumberPlateText(invEntity), plate) then return end
-
-                    Inventory.Remove(right)
-                    right = Inventory(data)
-                end
+                    if not (invEntity > 0 and DoesEntityExist(invEntity)) or (plate and not string.match(GetVehicleNumberPlateText(invEntity) or '', plate)) then
+						Inventory.Remove(right)
+						right = Inventory(data)
+					end
+				end
 			elseif invType == 'drop' then
 				right = Inventory(data.id)
 			else
@@ -176,16 +195,25 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 				right = Inventory(('evidence-%s'):format(data))
 			end
 		elseif invType == 'dumpster' then
-			---@cast data string
-			right = Inventory(data)
+			if shared.networkdumpsters then
+				local dumpsterId = getDumpsterFromCoords(data)
+				right = dumpsterId and Inventory(('dumpster-%s'):format(dumpsterId))
 
 			if not right then
-				local netid = tonumber(data:sub(9))
+					dumpsterId = #registeredDumpsters + 1
+					right = Inventory.Create(('dumpster-%s'):format(dumpsterId), locale('dumpster'), invType, 15, 0, 100000, false)
+					registeredDumpsters[dumpsterId] = data
+				end
+			else
+				---@cast data string
+				right = Inventory(data)
 
-				-- dumpsters do not work with entity lockdown. need to rewrite, but having to do
-				-- distance checks to some ~7000 dumpsters and freeze the entities isn't ideal
-				if netid and NetworkGetEntityFromNetworkId(netid) > 0 then
-					right = Inventory.Create(data, locale('dumpster'), invType, 15, 0, 100000, false)
+				if not right then
+					local netid = tonumber(data:sub(9))
+
+					if netid and NetworkGetEntityFromNetworkId(netid) > 0 then
+						right = Inventory.Create(data, locale('dumpster'), invType, 15, 0, 100000, false)
+					end
 				end
 			end
 		elseif invType == 'container' then
@@ -259,6 +287,12 @@ end
 ---@param invType string
 ---@param data string|number|table
 lib.callback.register('ox_inventory:openInventory', function(source, invType, data)
+	 if invType == 'player' and source ~= data then
+        local serverId = type(data) == 'table' and data.id or data
+
+        if source == serverId or type(serverId) ~= 'number' or not Player(serverId).state.canSteal then return end
+    end
+	
 	return openInventory(source, invType, data)
 end)
 
