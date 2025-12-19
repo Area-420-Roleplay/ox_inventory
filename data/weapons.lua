@@ -3,15 +3,63 @@ return {
 
 		-- 1 of 1
 
-		['WEAPON_DANNY101'] = {
-			label = 'Danny 101',
+		['WEAPON_AK47'] = {
+			label = 'AK47',
 			weight = 1400,
 			durability = 0.1,
-			ammoname = 'ammo-50',
-			caliber = '.50 Action Express'
+			ammoname = 'ammo-rifle2',
 		},
 
 		-- Fluffy Mods 
+
+		['WEAPON_SWMP9'] = { -- Fluffy Glock 19 PD VARIANT
+			label = 'M&P 9',
+			weight = 1400,
+			durability = 0.1,
+			ammoname = 'ammo-9',
+		},
+
+		['WEAPON_DOUBLEBARRELFM'] = { -- Fluffy Glock 19 PD VARIANT
+			label = 'Double Barrel',
+			weight = 1400,
+			durability = 0.1,
+			ammoname = 'ammo-shotgun',
+		},
+
+		['WEAPON_38SNUBNOSE'] = {
+			label = 'Revolver',
+			weight = 940,
+			durability = 0.2,
+			ammoname = 'ammo-38',
+		},
+
+		['WEAPON_38SNUBNOSE2'] = {
+			label = 'Revolver',
+			weight = 940,
+			durability = 0.2,
+			ammoname = 'ammo-38',
+		},
+
+		['WEAPON_38SNUBNOSE3'] = {
+			label = 'Revolver',
+			weight = 940,
+			durability = 0.2,
+			ammoname = 'ammo-38',
+		},
+
+		['WEAPON_38SPECIAL'] = {
+			label = 'Revolver',
+			weight = 940,
+			durability = 0.2,
+			ammoname = 'ammo-38',
+		},
+
+		['WEAPON_44MAGNUM'] = {
+			label = 'Revolver',
+			weight = 940,
+			durability = 0.2,
+			ammoname = 'ammo-38',
+		},
 
 		['WEAPON_M4A1BLOCK2'] = { -- Fluffy M4A1 Block
 			label = 'PD M4A1',
