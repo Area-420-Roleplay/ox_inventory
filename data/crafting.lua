@@ -5,11 +5,29 @@ return {
 			{
 				name = 'lockpick',
 				ingredients = {
-					scrapmetal = 5,
-					WEAPON_HAMMER = 0.05
+					metalscrap = 3,
 				},
 				duration = 5000,
-				count = 2,
+				count = 1,
+			},
+			{
+				name = 'ammobox_9',
+				ingredients = {
+					sulfur = 3,
+					charcoal = 1,
+					leadingot = 1
+				},
+				duration = 15000,
+				count = 1,
+			},
+			{
+				name = 'water',
+				ingredients = {
+					pistol_body = 1,
+					bp_pistol = 0.05
+				},
+				duration = 8000,
+				count = 1,
 			},
 		},
 		points = {

@@ -1,0 +1,43 @@
+For the crosses, I made the seeds of the crosses but normally if you want to develop something like this if you put 3 seeds with at least one different one, you can make 24 combinations
+to see afterwards how you want to do
+
+S  I  R     = W W
+R  I  S     = W B
+
+S  R  R     = W R
+R  R  S     = W G
+
+S  S  R     = W Y
+R  S  S     = B W
+------------------
+I  I  R     = B B
+R  I  I     = B R
+
+I  R  R     = B G
+R  R  I     = B Y
+
+I  S  R     = R W
+R  S  I     = R B
+-----------------
+
+I  I  S     = R R
+S  I  I     = Y Y
+
+I  R  S     = R Y
+S  R  I     = Y W
+
+I  S  S     = Y B
+S  S  I     = Y R
+
+-----------------
+
+S  I  S     = Y G
+S  R  S     = R G
+
+R  I  R     = G W
+R  S  R     = G B
+
+I  S  I     = G R
+I  R  I     = G Y
+
+All same seed      = G G

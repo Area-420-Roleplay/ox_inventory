@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
 
-$mainColor: #1E1F24;
+$mainColor: #212529;
 $textColor: #dbdcdf;
 $mainFont: Teko;
 
-$secondaryColor: #1E1F24;
+$secondaryColor: #212529;
 $secondaryColorHighlight: #3f3f3f;
 $secondaryColorLight: rgba(0, 0, 0, 0.5);
-$secondaryColorDark: rgba(12, 12, 12, 0.8);
+$secondaryColorDark: rgba(0, 0, 0, 0.8);
 
 $gridCols: 5;
 $gridRows: 5;
@@ -138,22 +138,31 @@ button:active {
 }
 
 
-  .inventory-control-input {
-    transition: 200ms;
-    width: 5vw;
-    height: 2vw;
-    border-radius: .5vh;
-    font-family: $mainFont;
-    font-size: 16px;
-    text-align: center;
-    outline: none;
-    border: none;
-    color: #fff;
-    background-color: $secondaryColor;
-    &:focus-within {
-      background-color: $secondaryColorDark;
-    }
+.inventory-control-input {
+  transition: 200ms;
+  width: 5vw;
+  height: 2vw;
+  border-radius: 0.5vh;
+  font-family: $mainFont;
+  font-size: 16px;
+  text-align: center;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* subtle glass border */
+  color: #fff;
+
+  /* Glassy background */
+  background-color: rgba($secondaryColor, 0.6); /* semi-transparent */
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.25), /* outer shadow for depth */
+    inset 0 1px 0 rgba(255, 255, 255, 0.08); /* inner highlight */
+
+  overflow: hidden;
+
+  &:focus-within {
+    background-color: rgba($secondaryColorDark, 0.65); /* darker glass on focus */
   }
+
+}
 
 
 .useful-controls-dialog {
@@ -281,7 +290,7 @@ button:active {
 .shop-inventory-grid-container {
   display: grid;
   height: $containerSize;
-  grid-template-columns: repeat(2, 25.5vh); /* Halved the column size */
+  grid-template-columns: repeat(2, 25.5vh);
   grid-auto-rows: $gridSize + 0.22vh;
   gap: $gridGap;
   overflow-y: scroll;
@@ -317,7 +326,7 @@ button:active {
   padding: 2px 3px;
   font-weight: 400;
   font-family: $mainFont;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .inventory-slot-number {
@@ -329,7 +338,7 @@ button:active {
   color: $textColor;
   background-color: $secondaryColor;
   padding: .3vh 1vh;
-  font-size: 14px;
+  font-size: 16px;
   font-family: $mainFont;
 }
 
@@ -339,7 +348,7 @@ button:active {
   justify-content: space-between;
   height: 100%;
   p {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -350,7 +359,7 @@ button:active {
   padding: 3px;
   gap: 3px;
   p {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -361,7 +370,7 @@ button:active {
   align-items: center;
   padding-right: 3px;
   p {
-    font-size: 14px;
+    font-size: 20px;
     text-shadow: 0.1vh 0.1vh 0 rgba(0, 0, 0, 0.7);
   }
 }
@@ -381,27 +390,91 @@ button:active {
 .tooltip-wrapper {
   pointer-events: none;
   display: flex;
-  background-color: rgba(14, 21, 22, 0.861);
-  width: 200px;
-  padding: 8px;
   flex-direction: column;
   min-width: 200px;
+  width: 200px;
+  padding: 8px;
+
   color: $textColor;
   font-family: $mainFont;
-  border-radius: 4px;
+
+  background-color: rgba($mainColor, 0.6);
+
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
   p {
-    font-size: 12px;
-    font-weight: 400;
+    font-size: 16px;
+    position: relative;
+    z-index: 1;
   }
 }
+/* -- Shine Version
+.tooltip-wrapper {
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  width: 200px;
+  padding: 8px;
+
+  color: $textColor;
+  font-family: $mainFont;
+
+  background-color: rgba($mainColor, 0.85);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      120deg,
+      rgba(255,255,255,0.05) 0%,
+      rgba(255,255,255,0.15) 50%,
+      rgba(255,255,255,0.05) 100%
+    );
+    transform: rotate(25deg);
+    animation: shine 3s infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-100%) rotate(25deg); }
+    50% { transform: translateX(100%) rotate(25deg); }
+    100% { transform: translateX(-100%) rotate(25deg); }
+  }
+
+  p {
+    font-size: 16px;
+    position: relative;
+    z-index: 1;
+  }
+}
+*/
+
 .tooltip-header-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   p {
-    font-size: 15px;
-    font-weight: 400;
+    font-size: 18px;
   }
 }
 
@@ -414,7 +487,7 @@ button:active {
     padding-right: 3px;
   }
   p {
-    font-size: 14px;
+    font-size: 18px;
   }
 }
 
@@ -427,8 +500,8 @@ button:active {
   flex-direction: row;
   align-items: center;
   img {
-    width: 28px;
-    height: 28px;
+    width: 50px;
+    height: 50px;
     padding-right: 5px;
   }
 }

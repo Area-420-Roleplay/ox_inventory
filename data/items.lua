@@ -53,6 +53,54 @@ return {
         consume = 0.3
     },
 
+    ["simple_crafting_table"] = {
+        label = "Simple Crafting Table",
+        weight = 2000,
+        stack = false,
+        close = false,
+        description = "A simple crafting table",
+        client = {
+            image = "simple_crafting_table.png",
+        },
+        server = {
+            export = "it-crafting.placeCraftingTable"
+        }
+    },
+
+    ["weapon_parts"] = {
+        label = "Weapon Parts",
+        weight = 0,
+        description = "Weapon Parts, used for crafting",
+    },
+
+    ["pistol_body"] = {
+        label = "Pistol Body",
+        weight = 0,
+        description = "Pistol Body, used for crafting",
+    },
+
+    ["bp_pistol"] = {
+        label = "Pistol Blueprint",
+        weight = 0,
+        consume = 0.1,
+        description = "Pistol Blueprint, used to craft a pistol",
+    },
+    
+    ["parcel"] = {
+		label = "Parcel",
+		weight = 350,
+		stack = false,
+		close = true,
+		consume = 0,
+		description = "Small package filled with something.",
+		client = {
+			image = "parcel.png",
+		},
+		server = {
+			export = 'sd-parceltheft.useParcel'
+		}
+	},
+
     ['ammobox_9'] = {
         label = 'Ammobox 9mm',
         weight = 220,
@@ -271,8 +319,8 @@ return {
 		weight = 115,
 		client = {
 			anim = { dict = 'missheistdockssetup1clipboard@idle_a', clip = 'idle_a', flag = 49 },
-			prop = { model = `prop_rolled_sock_02`, pos = vec3(-0.14, -0.14, -0.08), rot = vec3(-50.0, -50.0, 0.0) },
-			disable = { move = true, car = true, combat = true },
+			prop = { model = `prop_rolled_sock_02`, pos = vec3(0.0, -0.03, 0.0), rot = vec3(-50.0, -50.0, 0.0) },
+			disable = { move = false, car = true, combat = true },
 			usetime = 2500,
 		}
 	},
@@ -480,7 +528,7 @@ return {
         client = {
             image = 'radio.png',
         },
-        allowArmed = true
+        --allowArmed = true
     },
 
     ['screwdriverset'] = { 
@@ -5237,16 +5285,47 @@ return {
     },
     
     ["c4_bomb"] = {
-        label = "C4 Brick",
+        label = "C4 Bomb",
         weight = 1000,
-        stack = true,
-        close = true,
-        description = "Very Dangerous! High Yield Explosive.",
-        consume = 0,
-        client = {
-            image = "c4_bomb.png",
-        }
     },
+
+    ["bomb_suitcase"] = {
+        label = "Bomb suitcase",
+        weight = 1000,
+    },
+
+    ['toaster'] = {
+		label = 'Toaster',
+		weight = 1000,
+	},
+    ['boombox'] = {
+		label = 'Boom box',
+		weight = 1000,
+	},
+    ['television1'] = {
+		label = 'Old Tv',
+		weight = 4000,
+	},
+    ['vcr'] = {
+		label = 'Videocassette Recorder',
+		weight = 2000,
+	},
+    ['television2'] = {
+		label = 'Flat Tv',
+		weight = 2500,
+	},
+    ['console'] = {
+		label = 'Console',
+		weight = 1000,
+	},
+    ['microwave'] = {
+		label = 'Micro Wave',
+		weight = 5000,
+	},
+    ['breachingdevice'] = {
+		label = 'Breaching Device',
+		weight = 5000,
+	},
     
     ["thermite_h"] = {
         label = "Thermite Charge",
@@ -5843,6 +5922,23 @@ return {
     },
     metalscrap = { label = 'Metal Scrap', weight = 50, stack = true, description = "You can probably make something nice out of this",
         client = { image = 'metalscrap.png', }
+    },
+
+
+    ['syphoningkit'] = {
+        label = 'Syphoning Kit',
+        weight = 5000,
+        stack = false,
+        close = false,
+        description = 'A kit made to siphon gasoline from vehicles.'
+    },
+
+    ['jerrycan'] = {
+        label = 'Jerry Can',
+        weight = 15000,
+        stack = false,
+        close = false,
+        description = 'A Jerry Can made to hold gasoline.'
     },
 
 }
